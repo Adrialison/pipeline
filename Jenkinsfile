@@ -3,27 +3,25 @@ pipeline {
 
     stages {
 
-        stage('Clonar Repositorio') {
+        stage('Build') {
             steps {
-                echo 'Descargando el código desde GitHub...'
+                echo 'Construyendo proyecto...'
+                sh 'echo "Este es mi primer reporte generado por Jenkins" > reporte.txt'
+                sh 'zip archivo_comprimido.zip reporte.txt'
             }
         }
 
-        stage('Verificar Archivos') {  //ejecuta ls -la para mostrar los archivos del proyecto
+        stage('Test') {
             steps {
+                echo 'Ejecutando pruebas...'
                 sh 'ls -la'
             }
         }
 
-        stage('Mostrar index.html') {   //imprime el contenido de index.html.
+        stage('Deploy') {
             steps {
-                sh 'cat index.html'
-            }
-        }
-
-        stage('Finalizar') {
-            steps {
-                echo 'Pipeline ejecutado correctamente.'
+                echo 'Simulando despliegue...'
+                archiveArtifacts artifacts: 'reporte.txt, archivo_comprimido.zip', fingerprint: true
             }
         }
 
