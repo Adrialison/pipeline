@@ -2,28 +2,30 @@ pipeline {
     agent any
 
     stages {
-
         stage('Build') {
             steps {
-                echo 'Construyendo proyecto...'
-                sh 'echo "Este es mi primer reporte generado por Jenkins" > reporte.txt'
-                sh 'zip archivo_comprimido.zip reporte.txt'
+                echo 'Fase 1: Construyendo el reporte...'
+                // Creamos el archivo de texto
+                sh 'echo "Reporte generado por Jenkins el $(date)" > reporte.txt'
+                // Usamos tar (que sí está instalado) para comprimir
+                sh 'tar -cvf archivo_comprimido.tar reporte.txt'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Ejecutando pruebas...'
+                echo 'Fase 2: Verificando archivos...'
+                // Listamos para confirmar que existen
                 sh 'ls -la'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Simulando despliegue...'
-                archiveArtifacts artifacts: 'reporte.txt, archivo_comprimido.zip', fingerprint: true
+                echo 'Fase 3: Guardando artefactos para descargar...'
+                // Esto hace que los archivos aparezcan en la interfaz de Jenkins
+                archiveArtifacts artifacts: 'reporte.txt, *.tar', fingerprint: true
             }
         }
-
     }
 }
